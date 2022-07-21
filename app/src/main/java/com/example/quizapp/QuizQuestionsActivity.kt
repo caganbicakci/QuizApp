@@ -1,5 +1,6 @@
 package com.example.quizapp
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private var currentPosition: Int = 0
     private var questionsList: ArrayList<Question>? = null
     private var selectedAnswer: Int = -1
+    private var userName: String? = null
+    private var correctAnswers: Int = 0
 
     private lateinit var binding: ActivityQuizQuestionsBinding
 
@@ -31,9 +34,9 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         questionsList = Constants.getQuestions()
         Log.i(QUESTION_LIST, "QuestionsList size is ${questionsList?.size}")
 
-        for (q in questionsList!!) {
-            Log.e(EACH_QUESTIONS, q.question)
-        }
+//        for (q in questionsList!!) {
+//            Log.e(EACH_QUESTIONS, q.question)
+//        }
 
         setQuestion()
 
@@ -42,6 +45,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         binding.optionC.setOnClickListener(this)
         binding.optionD.setOnClickListener(this)
         binding.submitBtn.setOnClickListener(this)
+
+        userName = intent.getStringExtra(Constants.USER_NAME)
 
     }
 
@@ -57,11 +62,11 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
         val question: Question = questionsList!![currentPosition]
 
-        binding.progress.progress = currentPosition+1
+        binding.progress.progress = currentPosition + 1
         binding.progress.max = questionsList!!.size
 
         binding.progressTextView.text =
-            getString(R.string.progress_ratio, currentPosition+1, questionsList!!.size)
+            getString(R.string.progress_ratio, currentPosition + 1, questionsList!!.size)
 
         //binding.progressTextView.text = "$currentPosition/${questionsList.size}"
 
@@ -137,31 +142,38 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                     currentPosition++
 
                     when {
-                        currentPosition <= questionsList?.size!! -> {
+                        currentPosition < questionsList?.size!! -> {
                             setQuestion()
-                        }else -> {
-                            Toast.makeText(this, "Quiz Ended!", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            val resultIntent = Intent(this, QuizResultActivity::class.java)
+                            resultIntent.putExtra(Constants.USER_NAME, userName)
+                            resultIntent.putExtra(Constants.CORRECT_ANSWERS_COUNT, correctAnswers)
+                            resultIntent.putExtra(Constants.TOTAL_QUESTIONS_COUNT, questionsList?.size)
+                            startActivity(resultIntent)
                         }
                     }
                 } else {
                     val question = questionsList?.get(currentPosition)
-                    if(selectedAnswer != question?.correctAnswer){
+                    if (selectedAnswer != question?.correctAnswer) {
                         answerView(selectedAnswer, R.drawable.bg_wrong_answer)
+                    }else{
+                        correctAnswers++
                     }
                     answerView(question!!.correctAnswer, R.drawable.bg_correct_answer)
                 }
 
-                if(currentPosition+1 == questionsList?.size){
+                if (currentPosition + 1 == questionsList?.size) {
                     binding.submitBtn.text = getString(R.string.finish_quiz)
-                }else if(selectedAnswer != -1){
+                } else if (selectedAnswer != -1) {
                     binding.submitBtn.text = getString(R.string.next_question)
-                }else{
+                } else {
                     binding.submitBtn.text = getString(R.string.submit)
                 }
 
-                Log.i(CURRENT_QUESTION, currentPosition.toString())
-                Log.i(CURRENT_QUESTION, "*******************")
-                Log.i(CURRENT_QUESTION, questionsList!![currentPosition].optionA)
+//                Log.i(CURRENT_QUESTION, currentPosition.toString())
+//                Log.i(CURRENT_QUESTION, "*******************")
+//                Log.i(CURRENT_QUESTION, questionsList!![currentPosition].optionA)
 
                 selectedAnswer = -1
             }

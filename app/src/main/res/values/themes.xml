@@ -14,13 +14,4 @@
         <!-- Customize your theme here. -->
         <item name="android:windowFullscreen">true</item>
     </style>
-
-    <style name="answerBtnStyle">
-        <item name="android:padding">16dp</item>
-        <item name="android:layout_margin">10dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/bg_default_option</item>
-        <item name="android:text">test</item>
-    </style>
-
 </resources>

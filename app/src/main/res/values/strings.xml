@@ -6,8 +6,11 @@
     <string name="name_hint">Name</string>
     <string name="start">START</string>
     <string name="submit">SUBMIT</string>
-    <string name="finish">"FINISH"</string>
     <string name="progress_ratio">%d/%d</string>
     <string name="next_question">NEXT QUESTION</string>
     <string name="finish_quiz">FINISH</string>
+    <string name="result">Result</string>
+    <string name="congrats">Congratulations!</string>
+    <string name="username">%s</string>
+    <string name="score">Your score is %d out of %d</string>
 </resources>
